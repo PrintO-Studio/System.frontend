@@ -11,10 +11,10 @@ export default defineConfig({
     },
   },
   preview: {
-		allowedHosts: ['system.printo.studio'],
-	},
+    allowedHosts: ["system.printo.studio"],
+  },
   server: {
-    host: '0.0.0.0',
-    port: 5173
-  }
+    host: "0.0.0.0",
+    port: 5173,
+  },
 });

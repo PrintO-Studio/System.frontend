@@ -132,7 +132,7 @@ export default {
         <div class="flex flex-col">
           <Button type="submit" size="lg" class="mt-4" :disabled="isSubmitting">
             <p v-if="!isSubmitting">Войти</p>
-            <Loader2 v-if="isSubmitting" class="text-primary animate-spin" />
+            <Loader2 v-else class="animate-spin" />
           </Button>
           <RouterLink :to="PAGE_SIGN_UP" class="hover:underline text-sm"
             >Нету аккаунта? Создать.</RouterLink

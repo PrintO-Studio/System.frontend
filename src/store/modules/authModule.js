@@ -1,5 +1,6 @@
 import { useAxios } from "@vueuse/integrations/useAxios";
 import { http, router } from "@/main";
+import { PAGE_SIGN_IN } from "@/router";
 
 export default {
   actions: {
@@ -37,6 +38,19 @@ export default {
         .then((response) => onSuccess(response))
         .catch((error) => onError(error));
     },
+    async getIsAuthenticated(ctx, { onSuccess, onError }) {
+      return await useAxios(
+        `/auth/isAuthenticated`,
+        { method: "GET", cache: false },
+        http,
+        {
+          immediate: true,
+          abortPrevious: true,
+        },
+      )
+        .then((response) => onSuccess(response))
+        .catch((error) => onError(error));
+    },
     async postLogOut(ctx, { onSuccess, onError }) {
       return await useAxios(
         `/auth/logOut`,
@@ -48,7 +62,10 @@ export default {
         },
       )
         .then((response) => router.push(response.data.value.next))
-        .catch((error) => onError(error));
+        .catch((error) => {
+          router.push(PAGE_SIGN_IN);
+          onError(error);
+        });
     },
   },
   mutations: {},

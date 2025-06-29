@@ -13,8 +13,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import GoBackButton from "@/components/goBackButton.vue";
 
-import { ArrowLeft, Loader2, Plus } from "lucide-vue-next";
+import { Loader2, Plus } from "lucide-vue-next";
 import { PAGE_PRODUCTS } from "@/router";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -39,7 +40,7 @@ export default {
     Input,
     Textarea,
     FigurineVariation,
-    ArrowLeft,
+    GoBackButton,
     Loader2,
     Plus,
   },
@@ -102,11 +103,7 @@ export default {
   <Page class="flex flex-col">
     <NavigationBar>
       <template #pre-left>
-        <RouterLink :to="PAGE_PRODUCTS">
-          <Button variant="ghost">
-            <ArrowLeft class="size-4" />
-          </Button>
-        </RouterLink>
+        <GoBackButton />
       </template>
     </NavigationBar>
     <div class="border rounded-lg h-full w-full grow mb-4">

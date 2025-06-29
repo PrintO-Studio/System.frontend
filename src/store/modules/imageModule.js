@@ -6,7 +6,7 @@ export default {
     async postProductImages(ctx, { productId, files, onSuccess, onError }) {
       return await useAxios(
         `/products/${productId}/images`,
-        { method: "POST", data: files , cache: false },
+        { method: "POST", data: files, cache: false },
         http,
         {
           immediate: true,

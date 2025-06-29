@@ -16,8 +16,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FigurineVariation from "@/components/figurine/figurineVariation.vue";
 import ProductFilesTable from "@/components/productFilesTable.vue";
 import ProductImagesEditor from "@/components/productImagesEditor.vue";
+import GoBackButton from "@/components/goBackButton.vue";
 
-import { ArrowLeft, Loader2, Plus, Upload, Save } from "lucide-vue-next";
+import { Loader2, Plus, Upload, Save } from "lucide-vue-next";
 import { PAGE_PRODUCTS } from "@/router";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -49,7 +50,7 @@ export default {
     FigurineVariation,
     ProductFilesTable,
     ProductImagesEditor,
-    ArrowLeft,
+    GoBackButton,
     Loader2,
     Plus,
     Upload,
@@ -75,8 +76,8 @@ export default {
     const SKU = ref();
     const files = ref([]);
     const productId = parseInt(String(route.params.id));
-    const images = ref(undefined)
-    const isSavingOrder = ref(false)
+    const images = ref(undefined);
+    const isSavingOrder = ref(false);
     let initialVariations = [];
 
     fetchEditProduct();
@@ -98,7 +99,7 @@ export default {
             }
             return 0;
           });
-          images.value = product.images
+          images.value = product.images;
 
           form.setValues({
             product: response.data.value.product,
@@ -213,18 +214,18 @@ export default {
     }
 
     async function saveImageOrder(files) {
-      isSavingOrder.value = true
+      isSavingOrder.value = true;
       await store.dispatch("postProductImages", {
         productId,
-        files: files.map(f => f.id),
+        files: files.map((f) => f.id),
         onSuccess: (response) => {
           displaySonnerSuccess(`Поряд изображений успешно сохранён.`);
         },
         onError: (error) => {
           displaySonnerError(error);
         },
-      })
-      isSavingOrder.value = false
+      });
+      isSavingOrder.value = false;
     }
 
     return {
@@ -251,11 +252,7 @@ export default {
   <Page class="flex flex-col">
     <NavigationBar>
       <template #pre-left>
-        <RouterLink :to="PAGE_PRODUCTS">
-          <Button variant="ghost">
-            <ArrowLeft class="size-4" />
-          </Button>
-        </RouterLink>
+        <GoBackButton />
       </template>
       <template #center>
         <Tabs v-model="tab">
@@ -333,7 +330,7 @@ export default {
               :disabled="isSubmitting"
             >
               <template v-if="!isSubmitting">
-                <Save class="size-4"/>
+                <Save class="size-4" />
                 Сохранить изменения
               </template>
               <Loader2 v-else class="animate-spin" />
@@ -363,8 +360,8 @@ export default {
         <div v-show="tab == 'images'" class="flex flex-col grow">
           <ProductImagesEditor
             :isSaving="isSavingOrder"
-            :files="files" 
-            :images="images" 
+            :files="files"
+            :images="images"
             :productId="productId"
             @onOrderSave="saveImageOrder"
           />

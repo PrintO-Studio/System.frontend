@@ -25,33 +25,32 @@ export default {
     },
     images: {
       type: Array,
-      required: true
+      required: true,
     },
-    isSaving: Boolean
+    isSaving: Boolean,
   },
   watch: {
     files: {
       handler(newVal) {
-        const imageFiles = []
+        const imageFiles = [];
         newVal.forEach((file) => {
           if (file.contentType.includes("image")) {
             imageFiles.push(file);
           }
         });
-        this.usedImages = []
-        this.unusedImages = []
-        for(let imageKey in imageFiles) {
-          let imageFile = imageFiles[imageKey]
+        this.usedImages = [];
+        this.unusedImages = [];
+        for (let imageKey in imageFiles) {
+          let imageFile = imageFiles[imageKey];
 
-          let image = this.images.find(i => i.fileId == imageFile.id)
+          let image = this.images.find((i) => i.fileId == imageFile.id);
           if (image != undefined) {
-            this.usedImages.push({ ...imageFile, index: image.index })
-          }
-          else {
-            this.unusedImages.push(imageFile)
+            this.usedImages.push({ ...imageFile, index: image.index });
+          } else {
+            this.unusedImages.push(imageFile);
           }
         }
-        this.usedImages = this.usedImages.sort((a, b) => a.index - b.index)
+        this.usedImages = this.usedImages.sort((a, b) => a.index - b.index);
       },
       immediate: true,
     },
@@ -62,9 +61,7 @@ export default {
       unusedImages: [],
     };
   },
-  mounted() {
-    
-  }
+  mounted() {},
 };
 </script>
 
@@ -91,13 +88,13 @@ export default {
     </draggableComponent>
 
     <div class="flex m-4">
-      <Button 
-        class="ml-[auto]" 
+      <Button
+        class="ml-[auto]"
         @click="$emit('onOrderSave', usedImages)"
         :disabled="isSaving"
       >
         <template v-if="!isSaving">
-          <Save class="size-4"/>
+          <Save class="size-4" />
           Сохранить порядок
         </template>
         <Loader2 v-else class="animate-spin" />
