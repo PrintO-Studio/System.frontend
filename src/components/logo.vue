@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 
 <template>
   <img
-    src="/logo.svg"
+    src="/logo@0,25x.webp"
     alt="logo"
-    :class="cn('size-16 opacity-80', $attrs.class)"
+    :class="cn('w-16 opacity-80', $attrs.class)"
   />
 </template>

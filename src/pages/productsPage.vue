@@ -27,6 +27,7 @@ export default {
       await this.getAllProducts({
         startIndex: this.startIndex,
         pageSize: this.pageSize,
+        searchQuery: this.searchQuery,
         onSuccess: (response) => {
           this.products = response.data.value.items.map((f) => f);
           this.lastPage = response.data.value.lastPage;
@@ -54,6 +55,7 @@ export default {
       startIndex,
       pageSize,
       totalCount: 0,
+      searchQuery: this.$route.search ?? '',
     };
   },
   watch: {
@@ -62,6 +64,15 @@ export default {
       this.$router.replace({ query: { page: newVal } });
       await this.fetchProducts();
     },
+    searchQuery(newVal, oldVal) {
+      let queryReplace = newVal
+      if (newVal.length == 0)
+        queryReplace = undefined
+      this.$router.replace({ query: { search: queryReplace } });
+
+      if (oldVal.length > 0 && newVal.length == 0)
+        this.fetchProducts()
+    }
   },
   computed: {
     lastPossiblePage() {
@@ -92,11 +103,18 @@ export default {
           <Input
             class="absolute w-full h-full"
             placeholder="Поиск..."
-            disabled
+            v-model="searchQuery"
+            @keyup.enter="fetchProducts"
           />
-          <Search
-            class="absolute size-4 top-1/2 -translate-y-1/2 right-0 -translate-x-1/2"
-          />
+          <Button 
+            class="absolute top-1/2 -translate-y-1/2 right-0.5 size-8" 
+            variant="link"
+            @click="fetchProducts"
+          >
+            <Search
+              class=" size-4 "
+            />
+          </Button>
         </div>
       </template>
     </NavigationBar>
