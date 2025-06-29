@@ -12,13 +12,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FigurineVariation from "@/components/figurine/figurineVariation.vue";
 import ProductFilesTable from "@/components/productFilesTable.vue";
 import ProductImagesEditor from "@/components/productImagesEditor.vue";
 import GoBackButton from "@/components/goBackButton.vue";
+import Separator from "@/components/ui/separator/Separator.vue";
 
-import { Loader2, Plus, Upload, Save } from "lucide-vue-next";
+import { Loader2, Plus, Upload, Save, Trash2 } from "lucide-vue-next";
 import { PAGE_PRODUCTS } from "@/router";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -29,6 +40,7 @@ import { z } from "zod";
 import { displaySonnerError, displaySonnerSuccess } from "@/store/sonnerHelper";
 import { newFigurineVariation, rawFigurineSchema } from "@/components/figurine";
 import { useFileDialog } from "@vueuse/core";
+import { router } from "@/main";
 
 export default {
   components: {
@@ -41,6 +53,14 @@ export default {
     FormItem,
     FormLabel,
     FormMessage,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
     Tabs,
     TabsContent,
     TabsList,
@@ -51,10 +71,12 @@ export default {
     ProductFilesTable,
     ProductImagesEditor,
     GoBackButton,
+    Separator,
     Loader2,
     Plus,
     Upload,
     Save,
+    Trash2,
   },
   data() {
     return {
@@ -228,6 +250,19 @@ export default {
       isSavingOrder.value = false;
     }
 
+    async function deleteProduct() {
+      await store.dispatch("deleteFigurine", {
+        productId,
+        onSuccess: (response) => {
+          router.push(response.data.value.next);
+          displaySonnerSuccess(`Товар успешно удалён.`);
+        },
+        onError: (error) => {
+          displaySonnerError(error);
+        },
+      })
+    }
+
     return {
       SKU,
       form,
@@ -243,6 +278,7 @@ export default {
       saveImageOrder,
       images,
       isSavingOrder,
+      deleteProduct,
     };
   },
 };
@@ -337,6 +373,31 @@ export default {
             </Button>
           </div>
         </form>
+        <div v-show="tab == 'properties'" class=" opacity-0 hover:opacity-100 duration-75">
+          <Separator/>
+          <div class="p-4">
+            <AlertDialog>
+              <AlertDialogTrigger as-child>
+                <Button variant="destructive"> 
+                  <Trash2 class="size-4"/>
+                  Удалить
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader
+                  >Вы уверены что хотите удалить вариацию
+                  {{ form.values.product.name }}?</AlertDialogHeader
+                >
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Назад</AlertDialogCancel>
+                  <AlertDialogAction @click="deleteProduct"
+                    >Подтвержить</AlertDialogAction
+                  >
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </div>
         <div v-show="tab == 'files'" class="flex flex-col">
           <ProductFilesTable
             :files="files"

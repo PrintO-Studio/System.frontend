@@ -42,6 +42,19 @@ export default {
         .then((response) => onSuccess(response))
         .catch((error) => onError(error));
     },
+    async deleteFigurine(ctx, { productId, onSuccess, onError }) {
+      return await useAxios(
+        `/products/${productId}/figurines`,
+        { method: "DELETE", cache: false },
+        http,
+        {
+          immediate: true,
+          abortPrevious: true,
+        },
+      )
+        .then((response) => onSuccess(response))
+        .catch((error) => onError(error));
+    },
   },
   mutations: {},
   state: {},
