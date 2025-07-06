@@ -260,7 +260,7 @@ export default {
         onError: (error) => {
           displaySonnerError(error);
         },
-      })
+      });
     }
 
     return {
@@ -373,19 +373,22 @@ export default {
             </Button>
           </div>
         </form>
-        <div v-show="tab == 'properties'" class=" opacity-0 hover:opacity-100 duration-75">
-          <Separator/>
+        <div
+          v-show="tab == 'properties'"
+          class="opacity-0 hover:opacity-100 duration-75"
+        >
+          <Separator />
           <div class="p-4">
             <AlertDialog>
               <AlertDialogTrigger as-child>
-                <Button variant="destructive"> 
-                  <Trash2 class="size-4"/>
+                <Button variant="destructive">
+                  <Trash2 class="size-4" />
                   Удалить
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader
-                  >Вы уверены что хотите удалить вариацию
+                  >Вы уверены что хотите удалить товар
                   {{ form.values.product.name }}?</AlertDialogHeader
                 >
                 <AlertDialogFooter>

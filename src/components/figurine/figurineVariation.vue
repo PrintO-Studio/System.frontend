@@ -30,6 +30,7 @@ import {
 import Button from "../ui/button/Button.vue";
 import FigurineVariationEdit from "./figurineVariationEdit.vue";
 import { Trash2, Pencil } from "lucide-vue-next";
+import { figurineColors, figurineIntegrities, figurineScales } from ".";
 
 const [PropertyRowTemplate, PropertyRow] = createReusableTemplate();
 
@@ -79,6 +80,13 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      colors: figurineColors,
+      scales: figurineScales,
+      integrities: figurineIntegrities,
+    }
+  }
 };
 </script>
 
@@ -95,6 +103,12 @@ export default {
   <Card class="w-96 min-w-96 group">
     <CardHeader>
       <CardTitle>{{ variationValue.name }}</CardTitle>
+      <CardTitle 
+        class="text-sm font-normal text-secondary-foreground"
+        :class="{' text-destructive ' : !variationValue.isActive}"
+      >
+          {{ variationValue.isActive ? 'Активна' : 'Не активна' }}
+      </CardTitle>
     </CardHeader>
     <CardContent class="">
       <Table>
@@ -105,8 +119,11 @@ export default {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <PropertyRow name="Масштаб" :value="variationValue.scale" />
-          <PropertyRow name="Цвет" :value="variationValue.color" />
+          <PropertyRow name="Масштаб" :value="scales.find(s => s.value == variationValue.scale).label" />
+          <PropertyRow name="Цвет" :value="colors.find(c => c.value == variationValue.color).label" />
+          <PropertyRow name="Целостность" :value="integrities.find(i => i.value == variationValue.integrity).label" />
+          <PropertyRow name="Серия" :value="variationValue.series" />
+          <PropertyRow name="Количество фигурок" :value="variationValue.quantity" />
           <PropertyRow name="Вес, гр." :value="variationValue.weightGr" />
           <PropertyRow name="Высота, мм." :value="variationValue.heightMm" />
           <PropertyRow name="Ширина, мм." :value="variationValue.widthMm" />

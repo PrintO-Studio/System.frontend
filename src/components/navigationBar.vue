@@ -75,7 +75,9 @@ export default {
     selectStore(storeId) {
       this.postSelectStore({
         storeId,
-        onSuccess: () => {},
+        onSuccess: (response) => {
+          window.location.href = response.data.value.next;
+        },
         onError: (error) => {
           displaySonnerError(error);
         },
@@ -132,6 +134,7 @@ export default {
             <SelectGroup>
               <SelectLabel>Магазины</SelectLabel>
               <SelectItem
+                as="button"
                 v-for="store in memberships"
                 :key="store.id"
                 :value="store.id"

@@ -55,7 +55,7 @@ export default {
       startIndex,
       pageSize,
       totalCount: 0,
-      searchQuery: this.$route.search ?? '',
+      searchQuery: this.$route.search ?? "",
     };
   },
   watch: {
@@ -65,14 +65,12 @@ export default {
       await this.fetchProducts();
     },
     searchQuery(newVal, oldVal) {
-      let queryReplace = newVal
-      if (newVal.length == 0)
-        queryReplace = undefined
+      let queryReplace = newVal;
+      if (newVal.length == 0) queryReplace = undefined;
       this.$router.replace({ query: { search: queryReplace } });
 
-      if (oldVal.length > 0 && newVal.length == 0)
-        this.fetchProducts()
-    }
+      if (oldVal.length > 0 && newVal.length == 0) this.fetchProducts();
+    },
   },
   computed: {
     lastPossiblePage() {
@@ -106,14 +104,12 @@ export default {
             v-model="searchQuery"
             @keyup.enter="fetchProducts"
           />
-          <Button 
-            class="absolute top-1/2 -translate-y-1/2 right-0.5 size-8" 
+          <Button
+            class="absolute top-1/2 -translate-y-1/2 right-0.5 size-8"
             variant="link"
             @click="fetchProducts"
           >
-            <Search
-              class=" size-4 "
-            />
+            <Search class="size-4" />
           </Button>
         </div>
       </template>

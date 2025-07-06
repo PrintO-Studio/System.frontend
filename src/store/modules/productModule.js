@@ -3,7 +3,10 @@ import { http } from "@/main";
 
 export default {
   actions: {
-    async getAllProducts(ctx, { searchQuery, startIndex, pageSize, onSuccess, onError }) {
+    async getAllProducts(
+      ctx,
+      { searchQuery, startIndex, pageSize, onSuccess, onError },
+    ) {
       return await useAxios(
         `/products?searchQuery=${searchQuery}&startIndex=${startIndex}&pageSize=${pageSize}`,
         { method: "GET", cache: false },
