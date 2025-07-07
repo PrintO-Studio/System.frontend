@@ -85,8 +85,8 @@ export default {
       colors: figurineColors,
       scales: figurineScales,
       integrities: figurineIntegrities,
-    }
-  }
+    };
+  },
 };
 </script>
 
@@ -103,11 +103,11 @@ export default {
   <Card class="w-96 min-w-96 group">
     <CardHeader>
       <CardTitle>{{ variationValue.name }}</CardTitle>
-      <CardTitle 
+      <CardTitle
         class="text-sm font-normal text-secondary-foreground"
-        :class="{' text-destructive ' : !variationValue.isActive}"
+        :class="{ ' text-destructive ': !variationValue.isActive }"
       >
-          {{ variationValue.isActive ? 'Активна' : 'Не активна' }}
+        {{ variationValue.isActive ? "Активна" : "Не активна" }}
       </CardTitle>
     </CardHeader>
     <CardContent class="">
@@ -119,11 +119,24 @@ export default {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <PropertyRow name="Масштаб" :value="scales.find(s => s.value == variationValue.scale).label" />
-          <PropertyRow name="Цвет" :value="colors.find(c => c.value == variationValue.color).label" />
-          <PropertyRow name="Целостность" :value="integrities.find(i => i.value == variationValue.integrity).label" />
-          <PropertyRow name="Серия" :value="variationValue.series" />
-          <PropertyRow name="Количество фигурок" :value="variationValue.quantity" />
+          <PropertyRow
+            name="Масштаб"
+            :value="scales.find((s) => s.value == variationValue.scale).label"
+          />
+          <PropertyRow
+            name="Цвет"
+            :value="colors.find((c) => c.value == variationValue.color).label"
+          />
+          <PropertyRow
+            name="Целостность"
+            :value="
+              integrities.find((i) => i.value == variationValue.integrity).label
+            "
+          />
+          <PropertyRow
+            name="Количество фигурок"
+            :value="variationValue.quantity"
+          />
           <PropertyRow name="Вес, гр." :value="variationValue.weightGr" />
           <PropertyRow name="Высота, мм." :value="variationValue.heightMm" />
           <PropertyRow name="Ширина, мм." :value="variationValue.widthMm" />

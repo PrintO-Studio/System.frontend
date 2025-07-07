@@ -9,6 +9,7 @@ export interface Product {
     id: number,
     sku: string,
     name: string,
+    series: string,
     description: string,
     files: any[],
     images: any[]

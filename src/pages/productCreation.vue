@@ -59,7 +59,8 @@ export default {
         product: z.object({
           SKU: z.string().min(1).max(20),
           name: z.string().min(1).max(100),
-          description: z.string().max(5000).optional(),
+          series: z.string().max(50).optional(),
+          description: z.string().max(5000),
         }),
         variations: z.array(rawFigurineSchema).optional(),
       }),
@@ -121,6 +122,16 @@ export default {
         <FormField v-slot="{ componentField }" name="product.name">
           <FormItem>
             <FormLabel>Название</FormLabel>
+            <FormControl>
+              <Input type="text" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="product.series">
+          <FormItem>
+            <FormLabel>Серия</FormLabel>
             <FormControl>
               <Input type="text" v-bind="componentField" />
             </FormControl>

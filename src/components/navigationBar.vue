@@ -127,7 +127,7 @@ export default {
           :model-value="me?.selectedStoreId"
           @update:model-value="selectStore($event)"
         >
-          <SelectTrigger>
+          <SelectTrigger class="bg-primary-foreground">
             <SelectValue placeholder="Выберите магазин..." />
           </SelectTrigger>
           <SelectContent>

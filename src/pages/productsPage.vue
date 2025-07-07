@@ -6,9 +6,25 @@ import { columns as productColumns } from "@/components/products/columns";
 import { mapActions } from "vuex";
 import { displaySonnerError } from "@/store/sonnerHelper";
 import Button from "@/components/ui/button/Button.vue";
-import { Plus, Search } from "lucide-vue-next";
+import {
+  Plus,
+  Search,
+  ChevronLeft,
+  ChevronsLeft,
+  ChevronRight,
+  ChevronsRight,
+} from "lucide-vue-next";
 import { PAGE_PRODUCT_CREATION } from "@/router";
 import Input from "@/components/ui/input/Input.vue";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default {
   components: {
@@ -18,12 +34,33 @@ export default {
     Button,
     Plus,
     Search,
+    ChevronLeft,
+    ChevronsLeft,
+    ChevronRight,
+    ChevronsRight,
     Input,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
   },
   methods: {
     ...mapActions(["getAllProducts"]),
+
     async fetchProducts() {
       this.isProductsLoading = true;
+      if (
+        this.prevSearchQuery != this.searchQuery &&
+        this.searchQuery.length > 0
+      ) {
+        this.page = 1;
+        this.prevSearchQuery = this.searchQuery;
+        return;
+      }
+      this.products = [];
       await this.getAllProducts({
         startIndex: this.startIndex,
         pageSize: this.pageSize,
@@ -41,9 +78,10 @@ export default {
     },
   },
   data() {
-    let pageSize = 10;
+    let pageSize = this.$route.query.pageSize ?? 10;
     let page = this.$route.query.page ?? 1;
     let startIndex = (page - 1) * pageSize;
+    let searchQuery = this.$route.query.search ?? "";
 
     return {
       products: [],
@@ -55,21 +93,33 @@ export default {
       startIndex,
       pageSize,
       totalCount: 0,
-      searchQuery: this.$route.search ?? "",
+      searchQuery,
+      prevSearchQuery: searchQuery,
     };
   },
   watch: {
     async page(newVal) {
       this.startIndex = (newVal - 1) * this.pageSize;
-      this.$router.replace({ query: { page: newVal } });
+      this.$router.replace({
+        query: { ...this.$route.query, page: newVal, pageSize: this.pageSize },
+      });
       await this.fetchProducts();
     },
     searchQuery(newVal, oldVal) {
       let queryReplace = newVal;
       if (newVal.length == 0) queryReplace = undefined;
-      this.$router.replace({ query: { search: queryReplace } });
+      this.$router.replace({
+        query: { ...this.$route.query, search: queryReplace },
+      });
 
       if (oldVal.length > 0 && newVal.length == 0) this.fetchProducts();
+    },
+    pageSize(newVal) {
+      this.$router.replace({
+        query: { ...this.$route.query, pageSize: newVal },
+      });
+      this.page = 1;
+      this.fetchProducts();
     },
   },
   computed: {
@@ -121,26 +171,61 @@ export default {
         :is-loading="isProductsLoading"
         class="border-b"
       />
-      <div class="flex items-center justify-end p-4 space-x-2">
-        <p class="text-sm mr-4">
-          страница {{ page }} из {{ lastPossiblePage }}
-        </p>
-        <Button
-          variant="outline"
-          size="sm"
-          :disabled="page - 1 <= 0"
-          @click="page--"
-        >
-          Назад
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          :disabled="lastPage"
-          @click="page++"
-        >
-          Вперёд
-        </Button>
+      <div class="flex items-center justify-between p-4">
+        <div class="flex space-x-2 items-center">
+          <p class="text-sm mr-4">показывать по</p>
+          <Select v-model="pageSize" :default-value="pageSize">
+            <SelectTrigger class="bg-primary-foreground">
+              <SelectValue placeholder="Размер страницы..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Размеры страницы</SelectLabel>
+                <SelectItem as="button" :value="10">10</SelectItem>
+                <SelectItem as="button" :value="25">25</SelectItem>
+                <SelectItem as="button" :value="50">50</SelectItem>
+                <SelectItem as="button" :value="100">100</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div class="flex space-x-2 items-center">
+          <p class="text-sm mr-4">
+            страница {{ page }} из {{ lastPossiblePage }}
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="page - 1 <= 0"
+            @click="page = 1"
+          >
+            <ChevronsLeft class="size-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="page - 1 <= 0"
+            @click="page--"
+          >
+            <ChevronLeft class="size-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="lastPage"
+            @click="page++"
+          >
+            <ChevronRight class="size-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="lastPage"
+            @click="page = lastPossiblePage"
+          >
+            <ChevronsRight class="size-4" />
+          </Button>
+        </div>
       </div>
     </div>
   </Page>

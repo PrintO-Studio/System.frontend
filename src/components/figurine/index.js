@@ -28,13 +28,15 @@ export const rawFigurineSchema = z.object({
   id: z.number().optional(),
   isActive: z.boolean(),
   name: z.string().min(1).max(50),
-  scale: z.enum(figurineScales.map((s) => s.value)).optional().nullable(),
+  scale: z
+    .enum(figurineScales.map((s) => s.value))
+    .optional()
+    .nullable(),
   color: z.enum(figurineColors.map((c) => c.value)),
   integrity: z.enum(figurineIntegrities.map((i) => i.value)).optional(),
-  series: z.string().max(50).optional(),
   quantity: z.number().min(1).max(1000),
   weightGr: z.number().min(1).max(10000),
-  heightMm: z.number().min(1).max(1000),
+  heightMm: z.number().min(1).max(1000).optional(),
   widthMm: z.number().min(1).max(1000).optional(),
   depthMm: z.number().min(1).max(1000).optional(),
   minHeightMm: z.number().min(1).max(1000).optional(),

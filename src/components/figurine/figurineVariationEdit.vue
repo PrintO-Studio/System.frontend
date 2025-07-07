@@ -24,7 +24,12 @@ import Input from "@/components/ui/input/Input.vue";
 import Switch from "@/components/ui/switch/Switch.vue";
 
 import { useForm } from "vee-validate";
-import { figurineColors, figurineScales, figurineIntegrities, rawFigurineSchema } from ".";
+import {
+  figurineColors,
+  figurineScales,
+  figurineIntegrities,
+  rawFigurineSchema,
+} from ".";
 import { toTypedSchema } from "@vee-validate/zod";
 
 export default {
@@ -145,16 +150,6 @@ export default {
           </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="series">
-          <FormItem>
-            <FormLabel>Серия</FormLabel>
-            <FormControl>
-              <Input type="text" v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-
         <FormField v-slot="{ value, setValue }" name="quantity">
           <FormItem>
             <FormLabel>Количество фигурок</FormLabel>
@@ -213,9 +208,7 @@ export default {
           <FormField v-slot="{ value, setValue }" name="depthMm">
             <FormItem class="flex justify-between">
               <div class="content-center">
-                <FormLabel class="text-center"
-                  >Глубина, мм.</FormLabel
-                >
+                <FormLabel class="text-center">Глубина, мм.</FormLabel>
                 <FormMessage />
               </div>
               <FormNumberInput
@@ -248,9 +241,7 @@ export default {
           <FormField v-slot="{ value, setValue }" name="averageHeightMm">
             <FormItem class="flex justify-between">
               <div class="content-center">
-                <FormLabel class="text-center"
-                  >Средняя высота, мм.</FormLabel
-                >
+                <FormLabel class="text-center">Средняя высота, мм.</FormLabel>
                 <FormMessage />
               </div>
               <FormNumberInput
@@ -298,9 +289,7 @@ export default {
           <FormField v-slot="{ value, setValue }" name="priceBeforeSaleRub">
             <FormItem class="flex justify-between">
               <div class="content-center">
-                <FormLabel class="text-center"
-                  >Цена до скидки, руб.</FormLabel
-                >
+                <FormLabel class="text-center">Цена до скидки, руб.</FormLabel>
                 <FormMessage />
               </div>
               <FormNumberInput
@@ -332,10 +321,14 @@ export default {
         </div>
 
         <FormField v-slot="{ value, setValue }" name="isActive">
-          <FormItem class="flex ">
+          <FormItem class="flex">
             <FormLabel for="isActive">Активность</FormLabel>
             <FormControl>
-              <Switch id="isActive" :defaultValue="value" @update:modelValue="setValue" />
+              <Switch
+                id="isActive"
+                :defaultValue="value"
+                @update:modelValue="setValue"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
