@@ -28,8 +28,18 @@ import ProductFilesTable from "@/components/productFilesTable.vue";
 import ProductImagesEditor from "@/components/productImagesEditor.vue";
 import GoBackButton from "@/components/goBackButton.vue";
 import Separator from "@/components/ui/separator/Separator.vue";
+import HomeButton from "@/components/homeButton.vue";
+import Note from "@/components/note.vue";
 
-import { Loader2, Plus, Upload, Save, Trash2 } from "lucide-vue-next";
+import {
+  Loader2,
+  Plus,
+  Upload,
+  Save,
+  Trash2,
+  NotebookPen,
+  NotebookText,
+} from "lucide-vue-next";
 import { PAGE_PRODUCTS } from "@/router";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -71,12 +81,16 @@ export default {
     ProductFilesTable,
     ProductImagesEditor,
     GoBackButton,
+    HomeButton,
     Separator,
     Loader2,
     Plus,
     Upload,
     Save,
     Trash2,
+    NotebookPen,
+    NotebookText,
+    Note,
   },
   data() {
     return {
@@ -101,6 +115,7 @@ export default {
     const images = ref(undefined);
     const isSavingOrder = ref(false);
     let initialVariations = [];
+    const notes = ref([]);
 
     fetchEditProduct();
 
@@ -112,6 +127,7 @@ export default {
           let product = response.data.value.product;
           let variations = (initialVariations = response.data.value.variations);
           SKU.value = product.sku;
+          notes.value = product.notes;
           files.value = product.files.sort((a, b) => {
             if (a.contentType < b.contentType) {
               return -1;
@@ -264,6 +280,23 @@ export default {
       });
     }
 
+    async function addNote() {
+      await store.dispatch("postNote", {
+        productId,
+        input: {
+          text: "",
+          imortance: "low",
+        },
+        onSuccess: (response) => {
+          notes.value.push(response.data.value);
+          displaySonnerSuccess(`Новая заметка добавлена.`);
+        },
+        onError: (error) => {
+          displaySonnerError(error);
+        },
+      });
+    }
+
     return {
       SKU,
       form,
@@ -280,6 +313,8 @@ export default {
       images,
       isSavingOrder,
       deleteProduct,
+      notes,
+      addNote,
     };
   },
 };
@@ -290,6 +325,9 @@ export default {
     <NavigationBar>
       <template #pre-left>
         <GoBackButton />
+      </template>
+      <template #pro-left>
+        <HomeButton />
       </template>
       <template #center>
         <Tabs v-model="tab">
@@ -384,6 +422,24 @@ export default {
             </Button>
           </div>
         </form>
+        <div v-show="tab == 'properties'">
+          <Separator />
+          <div class="rounded-lg p-4 flex flex-col gap-4">
+            <span v-for="(note, index) in notes">
+              <Note
+                v-model:note="notes[index]"
+                :productId="productId"
+                @onDelete="notes.splice(index, 1)"
+              />
+            </span>
+            <div class="flex w-full justify-end gap-2">
+              <Button size="lg" variant="outline" @click="addNote">
+                <NotebookPen class="size-4" />
+                Добавить заметку
+              </Button>
+            </div>
+          </div>
+        </div>
         <div
           v-show="tab == 'properties'"
           class="opacity-0 hover:opacity-100 duration-75"

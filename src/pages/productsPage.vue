@@ -52,14 +52,6 @@ export default {
 
     async fetchProducts() {
       this.isProductsLoading = true;
-      if (
-        this.prevSearchQuery != this.searchQuery &&
-        this.searchQuery.length > 0
-      ) {
-        this.page = 1;
-        this.prevSearchQuery = this.searchQuery;
-        return;
-      }
       this.products = [];
       await this.getAllProducts({
         startIndex: this.startIndex,
@@ -78,9 +70,8 @@ export default {
     },
   },
   data() {
-    let pageSize = this.$route.query.pageSize ?? 10;
-    let page = this.$route.query.page ?? 1;
-    let startIndex = (page - 1) * pageSize;
+    let pageSize = Number(this.$route.query.pageSize ?? 25);
+    let startIndex = (Number(this.$route.query.page ?? 1) - 1) * pageSize;
     let searchQuery = this.$route.query.search ?? "";
 
     return {
@@ -88,7 +79,6 @@ export default {
       productColumns,
       isProductsLoading: false,
       PAGE_PRODUCT_CREATION,
-      page,
       lastPage: false,
       startIndex,
       pageSize,
@@ -98,12 +88,8 @@ export default {
     };
   },
   watch: {
-    async page(newVal) {
-      this.startIndex = (newVal - 1) * this.pageSize;
-      this.$router.replace({
-        query: { ...this.$route.query, page: newVal, pageSize: this.pageSize },
-      });
-      await this.fetchProducts();
+    startIndex(newVal) {
+      this.fetchProducts();
     },
     searchQuery(newVal, oldVal) {
       let queryReplace = newVal;
@@ -111,20 +97,31 @@ export default {
       this.$router.replace({
         query: { ...this.$route.query, search: queryReplace },
       });
-
-      if (oldVal.length > 0 && newVal.length == 0) this.fetchProducts();
+      if (this.page != 1) this.page = 1;
+      else if (oldVal.length > 0 && newVal.length == 0) this.fetchProducts();
     },
     pageSize(newVal) {
       this.$router.replace({
         query: { ...this.$route.query, pageSize: newVal },
       });
-      this.page = 1;
-      this.fetchProducts();
+      if (this.page != 1) this.page = 1;
+      else this.fetchProducts();
     },
   },
   computed: {
     lastPossiblePage() {
       return Math.ceil(this.totalCount / this.pageSize);
+    },
+    page: {
+      get() {
+        return this.startIndex / this.pageSize + 1;
+      },
+      set(value) {
+        this.$router.replace({
+          query: { ...this.$route.query, page: value },
+        });
+        this.startIndex = (value - 1) * this.pageSize;
+      },
     },
   },
   async mounted() {
@@ -152,7 +149,7 @@ export default {
             class="absolute w-full h-full"
             placeholder="Поиск..."
             v-model="searchQuery"
-            @keyup.enter="fetchProducts"
+            @keypress.enter="fetchProducts"
           />
           <Button
             class="absolute top-1/2 -translate-y-1/2 right-0.5 size-8"
@@ -164,14 +161,17 @@ export default {
         </div>
       </template>
     </NavigationBar>
-    <div class="border rounded-lg h-full w-full grow mb-4">
+    <div class="border rounded-lg h-full w-full grow mb-4 flex flex-col">
       <ProductsTable
         :data="products"
         :columns="productColumns"
         :is-loading="isProductsLoading"
-        class="border-b"
+        class="grow h-full"
       />
-      <div class="flex items-center justify-between p-4">
+      <div
+        class="flex items-center justify-between p-4"
+        v-if="!isProductsLoading"
+      >
         <div class="flex space-x-2 items-center">
           <p class="text-sm mr-4">показывать по</p>
           <Select v-model="pageSize" :default-value="pageSize">

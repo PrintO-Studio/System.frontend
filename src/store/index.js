@@ -6,6 +6,7 @@ import productModule from "./modules/productModule";
 import figurineModule from "./modules/figurineModule";
 import fileModule from "./modules/fileModule";
 import imageModule from "./modules/imageModule";
+import noteModule from "./modules/noteModule";
 
 export function createStore() {
   return _createStore({
@@ -16,6 +17,7 @@ export function createStore() {
       figurineModule,
       fileModule,
       imageModule,
+      noteModule,
     },
   });
 }

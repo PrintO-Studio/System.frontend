@@ -4,40 +4,49 @@ import { h } from 'vue'
 
 import ImageFile from '../imageFile.vue'
 import ProductRowActionButtons from './productRowActionButtons.vue'
+import IntegrationButton from './integrationButton.vue'
 
 export interface Product {
     id: number,
     sku: string,
     name: string,
     series: string,
-    description: string,
-    files: any[],
-    images: any[]
+    primaryImage: any,
+    versions: any
 }
 
 export const columns: ColumnDef<Product>[] = [
   {
+    id: 'position',
+    size: 30,
+    cell: ({row}) => {
+      return h('a', { class: 'content-center text-xs text-foreground/60'}, Number(row.id)+1)
+    }
+  },
+  {
     id: 'image',
     header: '',
-    cell: ({row}) => {
-      let product = row.original
-      let primaryImage = undefined
-      if (product.images.length > 0)
-        primaryImage = row.original.files[row.original.files.findIndex(f => product.images[0].fileId == f.id)]
-      return h(ImageFile, { class: 'size-32', file: primaryImage})
-    }
+    cell: ({row}) => h(ImageFile, { class: 'size-32', file: row.original.primaryImage})
   },
   {
     id: 'sku',
     accessorKey: 'sku',
     header: 'Артикул',
+    cell: ({row}) => h('h', { class: 'text-center' }, row.original.sku)
   },
   {
     id: 'name',
     accessorKey: 'name',
     header: 'Название',
     cell: ({ row }) => {
-      return h('p', { class: ' min-w-96 whitespace-break-spaces break-all' }, row.getValue('name'))
+      return h(
+        'div', 
+        { class: 'flex flex-col min-w-96' },
+        [
+          h('p', { class: 'whitespace-break-spaces break-all font-medium' }, row.getValue('name')),
+          h('p', { class: 'whitespace-break-spaces break-all text-xs text-foreground/60' }, row.original.series)
+        ]
+      )
     }
   },
   {
@@ -45,7 +54,10 @@ export const columns: ColumnDef<Product>[] = [
     header: 'OZON',
     size: 100,
     cell: ({ row }) => {
-      return h('div', h(X, { class: 'size-4 ' }))
+      return h(IntegrationButton, { 
+        productVersion: row.original.versions.productVersion, 
+        version: row.original.versions.ozonIntegrationVersion  
+      })
     }
   },
   {
@@ -53,7 +65,10 @@ export const columns: ColumnDef<Product>[] = [
     header: 'Wildberries',
     size: 100,
     cell: ({ row }) => {
-      return h('div', h(X, { class: 'size-4' }))
+      return h(IntegrationButton, { 
+        productVersion: row.original.versions.productVersion, 
+        version: row.original.versions.wildberriesIntegrationVersion
+      })
     }
   },
   {
@@ -61,7 +76,10 @@ export const columns: ColumnDef<Product>[] = [
     header: 'Yandex',
     size: 100,
     cell: ({ row }) => {
-      return h('div', h(X, { class: 'size-4' }))
+      return h(IntegrationButton, { 
+        productVersion: row.original.versions.productVersion, 
+        version: row.original.versions.yandexIntegrationVersion
+      })
     }
   },
   {

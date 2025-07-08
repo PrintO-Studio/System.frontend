@@ -55,7 +55,12 @@ export default {
 </script>
 
 <template>
-  <Table>
+  <template v-if="isLoading">
+    <div class="grow h-full flex items-center justify-center">
+      <Loader2 class="text-primary size-4 animate-spin"/>
+    </div>
+  </template>
+  <Table v-else class="border-b">
     <TableHeader>
       <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
         <TableHead
@@ -82,13 +87,6 @@ export default {
             :style="{ width: cell.column.getSize() + 'px' }"
           >
             <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
-          </TableCell>
-        </TableRow>
-      </template>
-      <template v-else-if="isLoading">
-        <TableRow>
-          <TableCell :colspan="columns.length" class="h-32">
-            <Loader2 class="text-primary size-4 animate-spin mx-[auto]"/>
           </TableCell>
         </TableRow>
       </template>

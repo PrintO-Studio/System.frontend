@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import GoBackButton from "@/components/goBackButton.vue";
+import HomeButton from "@/components/homeButton.vue";
 
 import { Loader2, Plus } from "lucide-vue-next";
 import { PAGE_PRODUCTS } from "@/router";
@@ -41,6 +42,7 @@ export default {
     Textarea,
     FigurineVariation,
     GoBackButton,
+    HomeButton,
     Loader2,
     Plus,
   },
@@ -105,6 +107,9 @@ export default {
     <NavigationBar>
       <template #pre-left>
         <GoBackButton />
+      </template>
+      <template #pro-left>
+        <HomeButton />
       </template>
     </NavigationBar>
     <div class="border rounded-lg h-full w-full grow mb-4">
