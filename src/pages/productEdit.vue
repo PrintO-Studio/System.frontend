@@ -30,6 +30,7 @@ import GoBackButton from "@/components/goBackButton.vue";
 import Separator from "@/components/ui/separator/Separator.vue";
 import HomeButton from "@/components/homeButton.vue";
 import Note from "@/components/note.vue";
+import Switch from "@/components/ui/switch/Switch.vue";
 
 import {
   Loader2,
@@ -91,6 +92,7 @@ export default {
     NotebookPen,
     NotebookText,
     Note,
+    Switch,
   },
   data() {
     return {
@@ -156,6 +158,7 @@ export default {
         product: z.object({
           name: z.string().min(1).max(100),
           series: z.string().max(50).optional(),
+          explicitContent: z.boolean().optional(),
           description: z.string().max(5000).optional(),
         }),
         variations: z.array(rawFigurineSchema).optional(),
@@ -297,6 +300,15 @@ export default {
       });
     }
 
+    function getNewVariation() {
+      let newVariation = {}
+      if (form.values.variations.length > 0)
+        newVariation = { ...form.values.variations[form.values.variations.length-1], id: undefined, sku: undefined}
+      else
+        newVariation = newFigurineVariation
+      return newVariation
+    }
+
     return {
       SKU,
       form,
@@ -315,6 +327,7 @@ export default {
       deleteProduct,
       notes,
       addNote,
+      getNewVariation,
     };
   },
 };
@@ -362,15 +375,27 @@ export default {
             </FormItem>
           </FormField>
 
-          <FormField v-slot="{ componentField }" name="product.series">
-            <FormItem>
-              <FormLabel>Серия</FormLabel>
-              <FormControl>
-                <Input type="text" v-bind="componentField" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
+          <div class="flex flex-row w-full gap-4 items-end">
+            <FormField v-slot="{ componentField }" name="product.series" >
+              <FormItem class="grow">
+                <FormLabel>Серия</FormLabel>
+                <FormControl>
+                  <Input type="text" v-bind="componentField" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            </FormField>
+    
+            <FormField v-slot="{ value, setValue }" name="product.explicitContent">
+              <FormItem class="flex flex-row items-center h-10">
+                <FormLabel>Признак 18+</FormLabel>
+                <FormControl>
+                  <Switch :default-value="value" @update:model-value="setValue"/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            </FormField>
+          </div>
 
           <FormField v-slot="{ componentField }" name="product.description">
             <FormItem>
@@ -396,7 +421,7 @@ export default {
                   <Button
                     type="button"
                     variant="outline"
-                    @click="setValue([...value, newVariation])"
+                    @click="setValue([...value, getNewVariation()])"
                     class="w-96 h-full min-h-64"
                   >
                     <Plus class="size-8" />

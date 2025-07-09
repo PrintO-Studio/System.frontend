@@ -38,6 +38,9 @@ export default {
   props: {
     productVersion: Number,
     version: Number,
+    onUpload : Function,
+    onUpdate : Function,
+    disabled: Boolean,
   },
   computed: {
     isError() {
@@ -77,14 +80,14 @@ export default {
       <template v-if="isError">
         <DropdownMenuLabel>Товар не загружен</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem as="button" class="w-full" disabled>
+        <DropdownMenuItem as="button" class="w-full" :disabled="disabled" @click="onUpload">
           Загрузить
         </DropdownMenuItem>
       </template>
       <template v-else-if="isWarning">
         <DropdownMenuLabel>Товар не актуален</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem as="button" class="w-full" disabled>
+        <DropdownMenuItem as="button" class="w-full" :disabled="disabled" @click="onUpdate">
           Обновить
         </DropdownMenuItem>
       </template>

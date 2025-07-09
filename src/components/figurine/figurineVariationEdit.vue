@@ -336,7 +336,7 @@ export default {
 
         <DialogFooter>
           <DialogClose>
-            <Button>Закрыть окно</Button>
+            <Button type="submit">Закрыть окно</Button>
           </DialogClose>
         </DialogFooter>
       </form>

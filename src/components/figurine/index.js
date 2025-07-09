@@ -45,6 +45,7 @@ export const rawFigurineSchema = z.object({
   priceRub: z.number().min(10).max(100000000),
   priceBeforeSaleRub: z.number().min(10).max(100000000),
   minimalPriceRub: z.number().min(10).max(100000000),
+  sku: z.string().optional().nullable()
 });
 
 export const newFigurineVariation = {

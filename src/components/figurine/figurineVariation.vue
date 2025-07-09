@@ -102,7 +102,10 @@ export default {
 
   <Card class="w-96 min-w-96 group">
     <CardHeader>
-      <CardTitle>{{ variationValue.name }}</CardTitle>
+      <div class="flex justify-between">
+        <CardTitle>{{ variationValue.name }}</CardTitle>
+        <h class=" text-xs text-foreground/80" v-if="variationValue.sku">SKU: {{ variationValue.sku }}</h>
+      </div>
       <CardTitle
         class="text-sm font-normal text-secondary-foreground"
         :class="{ ' text-destructive ': !variationValue.isActive }"

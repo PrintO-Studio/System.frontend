@@ -7,6 +7,7 @@ import figurineModule from "./modules/figurineModule";
 import fileModule from "./modules/fileModule";
 import imageModule from "./modules/imageModule";
 import noteModule from "./modules/noteModule";
+import ozonIntegrationModule from "./modules/ozonIntegrationModule";
 
 export function createStore() {
   return _createStore({
@@ -18,6 +19,7 @@ export function createStore() {
       fileModule,
       imageModule,
       noteModule,
+      ozonIntegrationModule,
     },
   });
 }

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import GoBackButton from "@/components/goBackButton.vue";
 import HomeButton from "@/components/homeButton.vue";
+import Switch from "@/components/ui/switch/Switch.vue";
 
 import { Loader2, Plus } from "lucide-vue-next";
 import { PAGE_PRODUCTS } from "@/router";
@@ -45,6 +46,7 @@ export default {
     HomeButton,
     Loader2,
     Plus,
+    Switch,
   },
   data() {
     return {
@@ -62,6 +64,7 @@ export default {
           SKU: z.string().min(1).max(20),
           name: z.string().min(1).max(100),
           series: z.string().max(50).optional(),
+          explicitContent: z.boolean().optional(),
           description: z.string().max(5000),
         }),
         variations: z.array(rawFigurineSchema).optional(),
@@ -71,6 +74,9 @@ export default {
     const form = useForm({
       validationSchema: formSchema,
       initialValues: {
+        product: {
+          explicitContent: false
+        },
         variations: [],
       },
     });
@@ -134,15 +140,27 @@ export default {
           </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="product.series">
-          <FormItem>
-            <FormLabel>Серия</FormLabel>
-            <FormControl>
-              <Input type="text" v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
+        <div class="flex flex-row w-full gap-4 items-end">
+          <FormField v-slot="{ componentField }" name="product.series" >
+            <FormItem class="grow">
+              <FormLabel>Серия</FormLabel>
+              <FormControl>
+                <Input type="text" v-bind="componentField" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+  
+          <FormField v-slot="{ value, setValue }" name="product.explicitContent">
+            <FormItem class="flex flex-row items-center h-10">
+              <FormLabel>Признак 18+</FormLabel>
+              <FormControl>
+                <Switch :default-value="value" @update:model-value="setValue"/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
 
         <FormField v-slot="{ componentField }" name="product.description">
           <FormItem>
