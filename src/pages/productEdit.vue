@@ -31,6 +31,7 @@ import Separator from "@/components/ui/separator/Separator.vue";
 import HomeButton from "@/components/homeButton.vue";
 import Note from "@/components/note.vue";
 import Switch from "@/components/ui/switch/Switch.vue";
+import IntegrationBlock from "@/components/integrationBlock.vue";
 
 import {
   Loader2,
@@ -52,6 +53,7 @@ import { displaySonnerError, displaySonnerSuccess } from "@/store/sonnerHelper";
 import { newFigurineVariation, rawFigurineSchema } from "@/components/figurine";
 import { useFileDialog } from "@vueuse/core";
 import { router } from "@/main";
+import { ozonUpdate } from "@/integrationHelper";
 
 export default {
   components: {
@@ -93,6 +95,7 @@ export default {
     NotebookText,
     Note,
     Switch,
+    IntegrationBlock,
   },
   data() {
     return {
@@ -118,6 +121,13 @@ export default {
     const isSavingOrder = ref(false);
     let initialVariations = [];
     const notes = ref([]);
+    const versions = ref({
+      productVersion: undefined,
+      ozonIntegrationVersion: undefined,
+      wildberriesIntegrationVersion: undefined,
+      yandexIntegrationVersion: undefined,
+    });
+    const isOzonUpdating = ref(false);
 
     fetchEditProduct();
 
@@ -140,6 +150,7 @@ export default {
             return 0;
           });
           images.value = product.images;
+          versions.value = product.versions;
 
           form.setValues({
             product: response.data.value.product,
@@ -301,12 +312,35 @@ export default {
     }
 
     function getNewVariation() {
-      let newVariation = {}
+      let newVariation = {};
       if (form.values.variations.length > 0)
-        newVariation = { ...form.values.variations[form.values.variations.length-1], id: undefined, sku: undefined}
-      else
-        newVariation = newFigurineVariation
-      return newVariation
+        newVariation = {
+          ...form.values.variations[form.values.variations.length - 1],
+          id: undefined,
+          sku: undefined,
+        };
+      else newVariation = newFigurineVariation;
+      return newVariation;
+    }
+
+    async function updateOzon() {
+      isOzonUpdating.value = true;
+      await ozonUpdate(
+        productId,
+        (response) => {
+          versions.value.ozonIntegrationVersion =
+            response.data.value.versions.ozonIntegrationVersion;
+          versions.value.productVersion =
+            response.data.value.versions.productVersion;
+          displaySonnerSuccess(
+            `Интеграция успешна (SKU: ${response.data.value.sku}).`,
+          );
+        },
+        (error) => {
+          displaySonnerError(error);
+        },
+      );
+      isOzonUpdating.value = false;
     }
 
     return {
@@ -328,6 +362,9 @@ export default {
       notes,
       addNote,
       getNewVariation,
+      versions,
+      updateOzon,
+      isOzonUpdating,
     };
   },
 };
@@ -348,6 +385,7 @@ export default {
             <TabsTrigger value="properties"> Свойства </TabsTrigger>
             <TabsTrigger value="files"> Файлы </TabsTrigger>
             <TabsTrigger value="images"> Изображения </TabsTrigger>
+            <TabsTrigger value="integrations"> Интеграции </TabsTrigger>
           </TabsList>
         </Tabs>
       </template>
@@ -376,7 +414,7 @@ export default {
           </FormField>
 
           <div class="flex flex-row w-full gap-4 items-end">
-            <FormField v-slot="{ componentField }" name="product.series" >
+            <FormField v-slot="{ componentField }" name="product.series">
               <FormItem class="grow">
                 <FormLabel>Серия</FormLabel>
                 <FormControl>
@@ -385,12 +423,18 @@ export default {
                 <FormMessage />
               </FormItem>
             </FormField>
-    
-            <FormField v-slot="{ value, setValue }" name="product.explicitContent">
+
+            <FormField
+              v-slot="{ value, setValue }"
+              name="product.explicitContent"
+            >
               <FormItem class="flex flex-row items-center h-10">
                 <FormLabel>Признак 18+</FormLabel>
                 <FormControl>
-                  <Switch :default-value="value" @update:model-value="setValue"/>
+                  <Switch
+                    :default-value="value"
+                    @update:model-value="setValue"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -521,6 +565,43 @@ export default {
             :productId="productId"
             @onOrderSave="saveImageOrder"
           />
+        </div>
+        <div
+          v-show="tab == 'integrations'"
+          class="flex flex-col grow p-4 gap-4"
+        >
+          <div class="grow flex flex-col gap-4">
+            <IntegrationBlock
+              headerClass="bg-blue-600"
+              v-model:version="versions.ozonIntegrationVersion"
+              :productVersion="versions.productVersion"
+              @onUpdate="updateOzon"
+              @onUpload="updateOzon"
+              :isUpdating="isOzonUpdating"
+              :isUploading="isOzonUpdating"
+            >
+              Ozon
+            </IntegrationBlock>
+            <IntegrationBlock
+              headerClass="bg-purple-500"
+              v-model::version="versions.wildberriesIntegrationVersion"
+              :productVersion="versions.productVersion"
+              disabled
+            >
+              Wildberries
+            </IntegrationBlock>
+            <IntegrationBlock
+              headerClass="bg-yellow-400"
+              v-model::version="versions.yandexIntegrationVersion"
+              :productVersion="versions.productVersion"
+              disabled
+            >
+              Yandex
+            </IntegrationBlock>
+          </div>
+          <h class="text-xs text-foreground/80">
+            Версия товара v{{ versions.productVersion }}
+          </h>
         </div>
       </div>
       <div

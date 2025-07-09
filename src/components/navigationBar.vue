@@ -118,8 +118,8 @@ export default {
 </script>
 
 <template>
-  <div class="w-screen h-20 backdrop-blur-lg fixed left-0 top-0 z-10" />
-  <div class="w-full h-20 sticky top-0 left-0 grid grid-cols-3 z-10">
+  <div class="w-screen h-20 backdrop-blur-lg fixed left-0 top-0 z-20" />
+  <div class="w-full h-20 sticky top-0 left-0 grid grid-cols-3 z-20">
     <template v-if="!isLoading">
       <div class="flex items-center justify-start gap-2">
         <slot name="pre-left" />

@@ -104,7 +104,9 @@ export default {
     <CardHeader>
       <div class="flex justify-between">
         <CardTitle>{{ variationValue.name }}</CardTitle>
-        <h class=" text-xs text-foreground/80" v-if="variationValue.sku">SKU: {{ variationValue.sku }}</h>
+        <h class="text-xs text-foreground/80" v-if="variationValue.sku"
+          >SKU: {{ variationValue.sku }}</h
+        >
       </div>
       <CardTitle
         class="text-sm font-normal text-secondary-foreground"

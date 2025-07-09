@@ -7,6 +7,7 @@ import ProductRowActionButtons from './productRowActionButtons.vue'
 import IntegrationButton from './integrationButton.vue'
 import { store } from '@/main'
 import { displaySonnerError, displaySonnerSuccess } from '@/store/sonnerHelper'
+import { ozonUpload } from '@/integrationHelper'
 
 export interface Product {
     id: number,
@@ -56,25 +57,26 @@ export const columns: ColumnDef<Product>[] = [
     header: 'Ozon',
     size: 100,
     cell: ({ row }) => {
-      function uploadUpdate() {
-        store.dispatch('postUploadFigurine', {
-          id: row.original.id,
-          onSuccess: (response) => {
+      async function upload() {
+        await ozonUpload(
+          row.original.id,
+          (response) => {
             row.original.versions.ozonIntegrationVersion = response.data.value.versions.ozonIntegrationVersion
             row.original.versions.productVersion = response.data.value.versions.productVersion
             displaySonnerSuccess(`Интеграция успешна (SKU: ${response.data.value.sku}).`);
           },
-          onError: (error) => {
+          (error) => {
             displaySonnerError(error);
           },
-        })
+        )
       }
+      function update() { return upload() }
 
       return h(IntegrationButton, { 
         productVersion: row.original.versions.productVersion, 
         version: row.original.versions.ozonIntegrationVersion,
-        onUpdate: uploadUpdate,
-        onUpload: uploadUpdate
+        onUpdate: update,
+        onUpload: upload
       })
     }
   },

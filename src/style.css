@@ -41,7 +41,7 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --warning: oklch(0.769 0.188 70.08);
-  --success: oklch(0.696 0.17 162.48);
+  --success: oklch(62.924% 0.13932 161.221);
   --error: var(--destructive);
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
@@ -63,7 +63,7 @@ button {
 }
 
 .adaptive-padding {
-  @apply px-[20vw] max-[2000px]:px-80 max-2xl:px-56 max-[1281px]:px-24 max-lg:px-8 max-sm:px-4;
+  @apply px-[20vw] max-[2000px]:px-56 max-2xl:px-32 max-[1281px]:px-24 max-lg:px-8 max-sm:px-2;
 }
 
 @theme inline {

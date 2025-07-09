@@ -75,7 +75,7 @@ export default {
       validationSchema: formSchema,
       initialValues: {
         product: {
-          explicitContent: false
+          explicitContent: false,
         },
         variations: [],
       },
@@ -141,7 +141,7 @@ export default {
         </FormField>
 
         <div class="flex flex-row w-full gap-4 items-end">
-          <FormField v-slot="{ componentField }" name="product.series" >
+          <FormField v-slot="{ componentField }" name="product.series">
             <FormItem class="grow">
               <FormLabel>Серия</FormLabel>
               <FormControl>
@@ -150,12 +150,15 @@ export default {
               <FormMessage />
             </FormItem>
           </FormField>
-  
-          <FormField v-slot="{ value, setValue }" name="product.explicitContent">
+
+          <FormField
+            v-slot="{ value, setValue }"
+            name="product.explicitContent"
+          >
             <FormItem class="flex flex-row items-center h-10">
               <FormLabel>Признак 18+</FormLabel>
               <FormControl>
-                <Switch :default-value="value" @update:model-value="setValue"/>
+                <Switch :default-value="value" @update:model-value="setValue" />
               </FormControl>
               <FormMessage />
             </FormItem>

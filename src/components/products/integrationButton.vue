@@ -38,8 +38,8 @@ export default {
   props: {
     productVersion: Number,
     version: Number,
-    onUpload : Function,
-    onUpdate : Function,
+    onUpload: Function,
+    onUpdate: Function,
     disabled: Boolean,
   },
   computed: {
@@ -47,7 +47,7 @@ export default {
       return this.version == undefined;
     },
     isWarning() {
-      return this.version != this.productVersion;
+      return this.version != undefined && this.version != this.productVersion;
     },
     isSuccess() {
       return this.version == this.productVersion;
@@ -58,36 +58,58 @@ export default {
 
 <template>
   <DropdownMenu>
-    <DropdownMenuTrigger class="flex items-center gap-2">
-      <Button v-if="isError" variant="secondary" class="rounded-full size-10">
+    <DropdownMenuTrigger class="flex items-center gap-2 relative">
+      <Button
+        v-if="isError"
+        variant="secondary"
+        class="rounded-full size-10 z-10"
+      >
         <CircleX class="size-4" />
       </Button>
       <Button
         v-else-if="isWarning"
         variant="secondary"
-        class="rounded-full size-10"
+        class="rounded-full size-10 z-10"
       >
         <TriangleAlert class="size-4" />
       </Button>
       <div
         v-else-if="isSuccess"
-        class="size-10 bg-secondary rounded-full inline-flex items-center justify-center"
+        class="size-10 bg-secondary rounded-full inline-flex items-center justify-center z-10"
       >
         <Check class="size-4" />
       </div>
+      <div
+        class="size-10 absolute left-1/2 -translate-x-1/2 blur-md scale-85 opacity-90 group-hover:scale-100 group-hover:opacity-100 duration-75"
+        :class="{
+          'bg-error/50': isError,
+          'bg-warning/70': isWarning,
+          'bg-success/60': isSuccess,
+        }"
+      />
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end" v-if="!isSuccess">
       <template v-if="isError">
         <DropdownMenuLabel>Товар не загружен</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem as="button" class="w-full" :disabled="disabled" @click="onUpload">
+        <DropdownMenuItem
+          as="button"
+          class="w-full"
+          :disabled="disabled"
+          @click="onUpload"
+        >
           Загрузить
         </DropdownMenuItem>
       </template>
       <template v-else-if="isWarning">
         <DropdownMenuLabel>Товар не актуален</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem as="button" class="w-full" :disabled="disabled" @click="onUpdate">
+        <DropdownMenuItem
+          as="button"
+          class="w-full"
+          :disabled="disabled"
+          @click="onUpdate"
+        >
           Обновить
         </DropdownMenuItem>
       </template>
