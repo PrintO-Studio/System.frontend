@@ -13,7 +13,7 @@ export default {
   },
   props: {
     headerClass: String,
-    version: Number,
+    integration: Object,
     productVersion: Number,
     disabled: Boolean,
     isUpdating: Boolean,
@@ -25,25 +25,33 @@ export default {
     };
   },
   computed: {
-    versionValue: {
+    integrationValue: {
       get() {
-        return this.version;
+        return this.integration;
       },
       set(value) {
-        this.$emit("update:version", value);
+        this.$emit("update:integration", value);
       },
     },
+    hasTask() {
+      return this.integrationValue != undefined && this.integrationValue.lastTask != undefined
+    },
     isError() {
-      return this.versionValue == undefined;
+      return this.hasTask == false;
     },
     isWarning() {
-      return (
-        this.versionValue != undefined &&
-        this.versionValue != this.productVersion
-      );
+      return this.hasTask == true && 
+        this.integrationValue.lastTask.inProgress == false && 
+        (this.integrationValue.lastTask.version != this.productVersion || this.integrationValue.lastTask.success == false);
     },
     isSuccess() {
-      return this.versionValue == this.productVersion;
+      return this.hasTask == true && 
+        this.integrationValue.lastTask.version == this.productVersion && 
+        this.integrationValue.lastTask.success == true;
+    },
+    isInProgress() {
+      return this.hasTask == true && 
+        this.integrationValue.lastTask.inProgress == true;
     },
   },
 };
@@ -55,7 +63,7 @@ export default {
   >
     <div
       class="absolute w-full h-full bg-secondary/80 flex items-center justify-center animate-pulse"
-      v-if="isUpdating || isUploading"
+      v-if="isUpdating || isUploading || isInProgress"
     >
       <Loader2 class="animate-spin" />
     </div>
@@ -70,7 +78,7 @@ export default {
         </h>
         <Button
           variant="outline"
-          v-if="versionValue && productVersion != versionValue"
+          v-if="isWarning"
           size="lg"
           class="w-32"
           :disabled="disabled"
@@ -80,7 +88,7 @@ export default {
         </Button>
         <Button
           variant="outline"
-          v-else-if="versionValue == undefined"
+          v-else-if="isError"
           size="lg"
           class="w-32"
           :disabled="disabled"
@@ -96,7 +104,7 @@ export default {
         class="text-xs text-foreground/80 text-right"
         v-if="isWarning || isSuccess"
       >
-        Версия товара v{{ versionValue }}
+        Версия товара v{{ integrationValue.lastTask?.version }}
       </h>
       <h class="text-xs text-foreground/80 text-right" v-else-if="isError">
         Товар не добавлен

@@ -61,8 +61,8 @@ export const columns: ColumnDef<Product>[] = [
         await ozonUpload(
           row.original.id,
           (response) => {
-            row.original.versions.ozonIntegrationVersion = response.data.value.versions.ozonIntegrationVersion
-            row.original.versions.productVersion = response.data.value.versions.productVersion
+            row.original.versions.ozon = response.data.value.versions.ozon
+            row.original.versions.productVersion = response.data.value.versions.version
             displaySonnerSuccess(`Интеграция успешна (SKU: ${response.data.value.sku}).`);
           },
           (error) => {
@@ -73,8 +73,8 @@ export const columns: ColumnDef<Product>[] = [
       function update() { return upload() }
 
       return h(IntegrationButton, { 
-        productVersion: row.original.versions.productVersion, 
-        version: row.original.versions.ozonIntegrationVersion,
+        productVersion: row.original.versions.version, 
+        integration: row.original.versions.ozon,
         onUpdate: update,
         onUpload: upload
       })
@@ -86,8 +86,8 @@ export const columns: ColumnDef<Product>[] = [
     size: 100,
     cell: ({ row }) => {
       return h(IntegrationButton, { 
-        productVersion: row.original.versions.productVersion, 
-        version: row.original.versions.wildberriesIntegrationVersion,
+        productVersion: row.original.versions.version, 
+        integration: row.original.versions.wildberries,
         disabled: true
       })
     }
@@ -98,8 +98,8 @@ export const columns: ColumnDef<Product>[] = [
     size: 100,
     cell: ({ row }) => {
       return h(IntegrationButton, { 
-        productVersion: row.original.versions.productVersion, 
-        version: row.original.versions.yandexIntegrationVersion,
+        productVersion: row.original.versions.version, 
+        integration: row.original.versions.yandex,
         disabled: true
       })
     }

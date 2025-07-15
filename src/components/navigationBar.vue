@@ -27,7 +27,7 @@ import Button from "./ui/button/Button.vue";
 
 import { mapActions } from "vuex";
 import { displaySonnerError } from "@/store/sonnerHelper";
-import { UserRound, Plus, Loader2 } from "lucide-vue-next";
+import { UserRound, Plus, Loader2, Paintbrush } from "lucide-vue-next";
 import { PAGE_SIGN_IN } from "@/router";
 
 export default {
@@ -56,6 +56,7 @@ export default {
     UserRound,
     Plus,
     Loader2,
+    Paintbrush,
   },
   data() {
     return {
@@ -149,7 +150,8 @@ export default {
       <div class="flex items-center justify-center">
         <slot name="center" />
       </div>
-      <div class="flex items-center justify-end">
+      <div class="flex items-center justify-end gap-2">
+        <slot name="pre-right"/>
         <DropdownMenu>
           <DropdownMenuTrigger class="flex items-center gap-2">
             <Button variant="outline">
@@ -166,6 +168,7 @@ export default {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <slot name="pro-right"/>
       </div>
     </template>
     <template v-else>

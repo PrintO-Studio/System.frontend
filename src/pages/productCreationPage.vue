@@ -27,6 +27,7 @@ import { useForm } from "vee-validate";
 import { z } from "zod";
 import { displaySonnerError, displaySonnerSuccess } from "@/store/sonnerHelper";
 import { newFigurineVariation, rawFigurineSchema } from "@/components/figurine";
+import ToolsButton from "@/components/toolsButton.vue";
 
 export default {
   components: {
@@ -47,6 +48,7 @@ export default {
     Loader2,
     Plus,
     Switch,
+    ToolsButton,
   },
   data() {
     return {
@@ -116,6 +118,9 @@ export default {
       </template>
       <template #pro-left>
         <HomeButton />
+      </template>
+      <template #pre-right>
+        <ToolsButton/>
       </template>
     </NavigationBar>
     <div class="border rounded-lg h-full w-full grow mb-4">

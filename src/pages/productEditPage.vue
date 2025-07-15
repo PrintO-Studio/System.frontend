@@ -32,6 +32,7 @@ import HomeButton from "@/components/homeButton.vue";
 import Note from "@/components/note.vue";
 import Switch from "@/components/ui/switch/Switch.vue";
 import IntegrationBlock from "@/components/integrationBlock.vue";
+import ToolsButton from "@/components/toolsButton.vue";
 
 import {
   Loader2,
@@ -96,6 +97,7 @@ export default {
     Note,
     Switch,
     IntegrationBlock,
+    ToolsButton,
   },
   data() {
     return {
@@ -122,10 +124,10 @@ export default {
     let initialVariations = [];
     const notes = ref([]);
     const versions = ref({
-      productVersion: undefined,
-      ozonIntegrationVersion: undefined,
-      wildberriesIntegrationVersion: undefined,
-      yandexIntegrationVersion: undefined,
+      version: undefined,
+      ozon: undefined,
+      wildberries: undefined,
+      yandex: undefined,
     });
     const isOzonUpdating = ref(false);
 
@@ -328,10 +330,7 @@ export default {
       await ozonUpdate(
         productId,
         (response) => {
-          versions.value.ozonIntegrationVersion =
-            response.data.value.versions.ozonIntegrationVersion;
-          versions.value.productVersion =
-            response.data.value.versions.productVersion;
+          versions.value = response.data.value.versions;
           displaySonnerSuccess(
             `Интеграция успешна (SKU: ${response.data.value.sku}).`,
           );
@@ -388,6 +387,9 @@ export default {
             <TabsTrigger value="integrations"> Интеграции </TabsTrigger>
           </TabsList>
         </Tabs>
+      </template>
+      <template #pre-right>
+        <ToolsButton/>
       </template>
     </NavigationBar>
     <div class="border rounded-lg h-full w-full grow flex flex-col mb-4">
@@ -573,8 +575,8 @@ export default {
           <div class="grow flex flex-col gap-4">
             <IntegrationBlock
               headerClass="bg-blue-600"
-              v-model:version="versions.ozonIntegrationVersion"
-              :productVersion="versions.productVersion"
+              v-model:integration="versions.ozon"
+              :productVersion="versions.version"
               @onUpdate="updateOzon"
               @onUpload="updateOzon"
               :isUpdating="isOzonUpdating"
@@ -584,23 +586,23 @@ export default {
             </IntegrationBlock>
             <IntegrationBlock
               headerClass="bg-purple-500"
-              v-model::version="versions.wildberriesIntegrationVersion"
-              :productVersion="versions.productVersion"
+              v-model::integration="versions.wildberries"
+              :productVersion="versions.version"
               disabled
             >
               Wildberries
             </IntegrationBlock>
             <IntegrationBlock
               headerClass="bg-yellow-400"
-              v-model::version="versions.yandexIntegrationVersion"
-              :productVersion="versions.productVersion"
+              v-model::integration="versions.yandex"
+              :productVersion="versions.version"
               disabled
             >
               Yandex
             </IntegrationBlock>
           </div>
           <h class="text-xs text-foreground/80">
-            Версия товара v{{ versions.productVersion }}
+            Версия товара v{{ versions.version }}
           </h>
         </div>
       </div>

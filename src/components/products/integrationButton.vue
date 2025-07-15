@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Button from "../ui/button/Button.vue";
-import { Check, CircleX, TriangleAlert } from "lucide-vue-next";
+import { Check, CircleX, Loader2, TriangleAlert } from "lucide-vue-next";
 
 export default {
   components: {
@@ -34,23 +34,35 @@ export default {
     CircleX,
     TriangleAlert,
     Check,
+    Loader2,
   },
   props: {
     productVersion: Number,
-    version: Number,
+    integration: Object,
     onUpload: Function,
     onUpdate: Function,
     disabled: Boolean,
   },
   computed: {
+    hasTask() {
+      return this.integration.lastTask != undefined
+    },
     isError() {
-      return this.version == undefined;
+      return this.hasTask == false;
     },
     isWarning() {
-      return this.version != undefined && this.version != this.productVersion;
+      return this.hasTask == true && 
+        this.integration.lastTask.inProgress == false && 
+        (this.integration.lastTask.version != this.productVersion || this.integration.lastTask.success == false);
     },
     isSuccess() {
-      return this.version == this.productVersion;
+      return this.hasTask == true && 
+        this.integration.lastTask.version == this.productVersion && 
+        this.integration.lastTask.success == true;
+    },
+    isInProgress() {
+      return this.hasTask == true && 
+        this.integration.lastTask.inProgress == true;
     },
   },
 };
@@ -59,8 +71,11 @@ export default {
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger class="flex items-center gap-2 relative">
+      <div v-if="isInProgress">
+        <Loader2 class=" size-4 animate-spin"/>
+      </div>
       <Button
-        v-if="isError"
+        v-else-if="isError"
         variant="secondary"
         class="rounded-full size-10 z-10"
       >
@@ -82,6 +97,7 @@ export default {
       <div
         class="size-10 absolute left-1/2 -translate-x-1/2 blur-md scale-85 opacity-90 group-hover:scale-100 group-hover:opacity-100 duration-75"
         :class="{
+          '': isInProgress,
           'bg-error/50': isError,
           'bg-warning/70': isWarning,
           'bg-success/60': isSuccess,
@@ -89,7 +105,10 @@ export default {
       />
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end" v-if="!isSuccess">
-      <template v-if="isError">
+      <template v-if="isInProgress">
+        <DropdownMenuLabel>Интеграция в процессе...</DropdownMenuLabel>
+      </template>
+      <template v-else-if="isError">
         <DropdownMenuLabel>Товар не загружен</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem

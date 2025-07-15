@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ToolsButton from "@/components/toolsButton.vue";
 
 export default {
   components: {
@@ -46,6 +47,7 @@ export default {
     SelectLabel,
     SelectTrigger,
     SelectValue,
+    ToolsButton,
   },
   methods: {
     ...mapActions(["getAllProducts"]),
@@ -159,6 +161,9 @@ export default {
             <Search class="size-4" />
           </Button>
         </div>
+      </template>
+      <template #pre-right>
+        <ToolsButton/>
       </template>
     </NavigationBar>
     <div class="border rounded-lg h-full w-full grow mb-4 flex flex-col">
