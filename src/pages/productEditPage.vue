@@ -389,7 +389,7 @@ export default {
         </Tabs>
       </template>
       <template #pre-right>
-        <ToolsButton/>
+        <ToolsButton />
       </template>
     </NavigationBar>
     <div class="border rounded-lg h-full w-full grow flex flex-col mb-4">

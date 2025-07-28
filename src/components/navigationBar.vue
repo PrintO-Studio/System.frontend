@@ -151,7 +151,7 @@ export default {
         <slot name="center" />
       </div>
       <div class="flex items-center justify-end gap-2">
-        <slot name="pre-right"/>
+        <slot name="pre-right" />
         <DropdownMenu>
           <DropdownMenuTrigger class="flex items-center gap-2">
             <Button variant="outline">
@@ -168,7 +168,7 @@ export default {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <slot name="pro-right"/>
+        <slot name="pro-right" />
       </div>
     </template>
     <template v-else>

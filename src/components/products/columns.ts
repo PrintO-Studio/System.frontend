@@ -29,7 +29,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     id: 'image',
     header: '',
-    cell: ({row}) => h(ImageFile, { class: 'size-32', file: row.original.primaryImage})
+    cell: ({row}) => h(ImageFile, { class: 'size-32', file: { fullPath: row.original.primaryImage }})
   },
   {
     id: 'sku',

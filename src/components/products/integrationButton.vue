@@ -45,24 +45,30 @@ export default {
   },
   computed: {
     hasTask() {
-      return this.integration.lastTask != undefined
+      return this.integration.lastTask != undefined;
     },
     isError() {
       return this.hasTask == false;
     },
     isWarning() {
-      return this.hasTask == true && 
-        this.integration.lastTask.inProgress == false && 
-        (this.integration.lastTask.version != this.productVersion || this.integration.lastTask.success == false);
+      return (
+        this.hasTask == true &&
+        this.integration.lastTask.inProgress == false &&
+        (this.integration.lastTask.version != this.productVersion ||
+          this.integration.lastTask.success == false)
+      );
     },
     isSuccess() {
-      return this.hasTask == true && 
-        this.integration.lastTask.version == this.productVersion && 
-        this.integration.lastTask.success == true;
+      return (
+        this.hasTask == true &&
+        this.integration.lastTask.version == this.productVersion &&
+        this.integration.lastTask.success == true
+      );
     },
     isInProgress() {
-      return this.hasTask == true && 
-        this.integration.lastTask.inProgress == true;
+      return (
+        this.hasTask == true && this.integration.lastTask.inProgress == true
+      );
     },
   },
 };
@@ -72,7 +78,7 @@ export default {
   <DropdownMenu>
     <DropdownMenuTrigger class="flex items-center gap-2 relative">
       <div v-if="isInProgress">
-        <Loader2 class=" size-4 animate-spin"/>
+        <Loader2 class="size-4 animate-spin" />
       </div>
       <Button
         v-else-if="isError"

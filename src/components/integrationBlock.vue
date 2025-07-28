@@ -34,24 +34,34 @@ export default {
       },
     },
     hasTask() {
-      return this.integrationValue != undefined && this.integrationValue.lastTask != undefined
+      return (
+        this.integrationValue != undefined &&
+        this.integrationValue.lastTask != undefined
+      );
     },
     isError() {
       return this.hasTask == false;
     },
     isWarning() {
-      return this.hasTask == true && 
-        this.integrationValue.lastTask.inProgress == false && 
-        (this.integrationValue.lastTask.version != this.productVersion || this.integrationValue.lastTask.success == false);
+      return (
+        this.hasTask == true &&
+        this.integrationValue.lastTask.inProgress == false &&
+        (this.integrationValue.lastTask.version != this.productVersion ||
+          this.integrationValue.lastTask.success == false)
+      );
     },
     isSuccess() {
-      return this.hasTask == true && 
-        this.integrationValue.lastTask.version == this.productVersion && 
-        this.integrationValue.lastTask.success == true;
+      return (
+        this.hasTask == true &&
+        this.integrationValue.lastTask.version == this.productVersion &&
+        this.integrationValue.lastTask.success == true
+      );
     },
     isInProgress() {
-      return this.hasTask == true && 
-        this.integrationValue.lastTask.inProgress == true;
+      return (
+        this.hasTask == true &&
+        this.integrationValue.lastTask.inProgress == true
+      );
     },
   },
 };
