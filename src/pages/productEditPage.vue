@@ -54,7 +54,7 @@ import { displaySonnerError, displaySonnerSuccess } from "@/store/sonnerHelper";
 import { newFigurineVariation, rawFigurineSchema } from "@/components/figurine";
 import { useFileDialog } from "@vueuse/core";
 import { router } from "@/main";
-import { ozonUpdate } from "@/integrationHelper";
+import { ozonUpdate, wbUpdate } from "@/integrationHelper";
 
 export default {
   components: {
@@ -130,6 +130,7 @@ export default {
       yandex: undefined,
     });
     const isOzonUpdating = ref(false);
+    const isWbUpdating = ref(false);
 
     fetchEditProduct();
 
@@ -332,7 +333,7 @@ export default {
         (response) => {
           versions.value = response.data.value.versions;
           displaySonnerSuccess(
-            `Интеграция успешна (SKU: ${response.data.value.sku}).`,
+            `Интеграция Ozon успешна (SKU: ${response.data.value.sku}).`,
           );
         },
         (error) => {
@@ -340,6 +341,23 @@ export default {
         },
       );
       isOzonUpdating.value = false;
+    }
+
+    async function updateWb() {
+      isWbUpdating.value = true;
+      await wbUpdate(
+        productId,
+        (response) => {
+          versions.value = response.data.value.versions;
+          displaySonnerSuccess(
+            `Интеграция WB успешна (SKU: ${response.data.value.sku}).`,
+          );
+        },
+        (error) => {
+          displaySonnerError(error);
+        },
+      );
+      isWbUpdating.value = false;
     }
 
     return {
@@ -364,6 +382,8 @@ export default {
       versions,
       updateOzon,
       isOzonUpdating,
+      updateWb,
+      isWbUpdating,
     };
   },
 };
@@ -586,15 +606,18 @@ export default {
             </IntegrationBlock>
             <IntegrationBlock
               headerClass="bg-purple-500"
-              v-model::integration="versions.wildberries"
+              v-model:integration="versions.wildberries"
               :productVersion="versions.version"
-              disabled
+              @onUpdate="updateWb"
+              @onUpload="updateWb"
+              :isUpdating="isWbUpdating"
+              :isUploading="isWbUpdating"
             >
               Wildberries
             </IntegrationBlock>
             <IntegrationBlock
               headerClass="bg-yellow-400"
-              v-model::integration="versions.yandex"
+              v-model:integration="versions.yandex"
               :productVersion="versions.version"
               disabled
             >

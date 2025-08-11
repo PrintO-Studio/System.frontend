@@ -3,7 +3,7 @@ import { http, router } from "@/main";
 
 export default {
   actions: {
-    async postUpdateAllFigurines(ctx, { onSuccess, onError }) {
+    async postUpdateAllFigurinesOzon(ctx, { onSuccess, onError }) {
       return await useAxios(
         `integrations/ozon/figurines/update`,
         { method: "POST", cache: false },
@@ -16,7 +16,7 @@ export default {
         .then((response) => onSuccess(response))
         .catch((error) => onError(error));
     },
-    async postUploadFigurine(ctx, { id, onSuccess, onError }) {
+    async postUpdateFigurineOzon(ctx, { id, onSuccess, onError }) {
       return await useAxios(
         `integrations/ozon/figurines/${id}/update`,
         { method: "POST", cache: false },

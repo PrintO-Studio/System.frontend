@@ -37,11 +37,11 @@ export default {
     Loader2,
   },
   methods: {
-    ...mapActions(["postUpdateAllFigurines"]),
+    ...mapActions(["postUpdateAllFigurinesOzon"]),
     async invokeFullOzonIntegration() {
       this.ozonFullIntegrationIsLoading = true;
       displaySonnerSuccess("Полная интеграция Ozon запущена.");
-      await this.postUpdateAllFigurines({
+      await this.postUpdateAllFigurinesOzon({
         onSuccess: (response) => {
           displaySonnerSuccess("Полная интеграция Ozon успешна.");
         },

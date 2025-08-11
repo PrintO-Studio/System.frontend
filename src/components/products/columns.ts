@@ -7,7 +7,7 @@ import ProductRowActionButtons from './productRowActionButtons.vue'
 import IntegrationButton from './integrationButton.vue'
 import { store } from '@/main'
 import { displaySonnerError, displaySonnerSuccess } from '@/store/sonnerHelper'
-import { ozonUpload } from '@/integrationHelper'
+import { ozonUpdate, wbUpdate } from '@/integrationHelper'
 
 export interface Product {
     id: number,
@@ -57,26 +57,25 @@ export const columns: ColumnDef<Product>[] = [
     header: 'Ozon',
     size: 100,
     cell: ({ row }) => {
-      async function upload() {
-        await ozonUpload(
+      async function update() { 
+        await ozonUpdate(
           row.original.id,
           (response) => {
             row.original.versions.ozon = response.data.value.versions.ozon
             row.original.versions.productVersion = response.data.value.versions.version
-            displaySonnerSuccess(`Интеграция успешна (SKU: ${response.data.value.sku}).`);
+            displaySonnerSuccess(`Ozon Интеграция успешна (SKU: ${response.data.value.sku}).`);
           },
           (error) => {
             displaySonnerError(error);
           },
         )
       }
-      function update() { return upload() }
 
       return h(IntegrationButton, { 
         productVersion: row.original.versions.version, 
         integration: row.original.versions.ozon,
         onUpdate: update,
-        onUpload: upload
+        onUpload: update
       })
     }
   },
@@ -85,10 +84,25 @@ export const columns: ColumnDef<Product>[] = [
     header: 'Wildberries',
     size: 100,
     cell: ({ row }) => {
+      async function update() { 
+        await wbUpdate(
+          row.original.id,
+          (response) => {
+            row.original.versions.wildberries = response.data.value.versions.wildberries
+            row.original.versions.productVersion = response.data.value.versions.version
+            displaySonnerSuccess(`Wildberries Интеграция успешна (SKU: ${response.data.value.sku}).`);
+          },
+          (error) => {
+            displaySonnerError(error);
+          },
+        )
+      }
+
       return h(IntegrationButton, { 
         productVersion: row.original.versions.version, 
         integration: row.original.versions.wildberries,
-        disabled: true
+        onUpdate: update,
+        onUpload: update
       })
     }
   },
