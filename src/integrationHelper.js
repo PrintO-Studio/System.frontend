@@ -15,4 +15,3 @@ export async function wbUpdate(figurineId, onSuccess, onError) {
     onError,
   });
 }
-

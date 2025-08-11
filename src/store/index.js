@@ -21,7 +21,7 @@ export function createStore() {
       imageModule,
       noteModule,
       ozonIntegrationModule,
-      wbIntegrationModule
+      wbIntegrationModule,
     },
   });
 }
