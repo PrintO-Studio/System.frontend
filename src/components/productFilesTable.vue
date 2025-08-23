@@ -93,12 +93,16 @@ export default {
     </TableHeader>
     <TableBody>
       <TableRow v-for="(file, index) in files" :key="file.id" class="group">
-        <TableCell class="w-24 text-center text-muted-foreground">{{ index + 1 }}</TableCell>
+        <TableCell class="w-24 text-center text-muted-foreground">{{
+          index + 1
+        }}</TableCell>
         <TableCell class="font-medium">
           {{ extractFileName(file) }}
         </TableCell>
         <TableCell class="font-medium">
-          <Badge :class="{' bg-blue-500' : extractFileName(file).includes('.stl')}">
+          <Badge
+            :class="{ ' bg-blue-500': extractFileName(file).includes('.stl') }"
+          >
             {{ file.contentType }}
           </Badge>
         </TableCell>

@@ -68,7 +68,7 @@ export default {
           series: z.string().max(50).optional(),
           explicitContent: z.boolean().optional(),
           description: z.string().max(5000),
-          warehouseStorageNumber: z.number().positive().optional()
+          warehouseStorageNumber: z.number().positive().optional(),
         }),
         variations: z.array(rawFigurineSchema).optional(),
       }),
@@ -181,11 +181,21 @@ export default {
           </FormItem>
         </FormField>
 
-        <FormField v-slot="{ value, setValue  }" name="product.warehouseStorageNumber">
+        <FormField
+          v-slot="{ value, setValue }"
+          name="product.warehouseStorageNumber"
+        >
           <FormItem>
             <FormLabel>Секция хранения на складе</FormLabel>
             <FormControl>
-              <Input :default-value="value" @update:model-value="(v) => { setValue(Number(v)) }" />
+              <Input
+                :default-value="value"
+                @update:model-value="
+                  (v) => {
+                    setValue(Number(v));
+                  }
+                "
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
