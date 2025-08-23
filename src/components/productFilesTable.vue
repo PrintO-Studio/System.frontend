@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import Button from "./ui/button/Button.vue";
 import { ArrowDownToLine, Trash2 } from "lucide-vue-next";
+import Badge from "./ui/badge/Badge.vue";
 
 export default {
   components: {
@@ -39,6 +40,7 @@ export default {
     Button,
     ArrowDownToLine,
     Trash2,
+    Badge,
   },
   props: {
     files: {
@@ -91,12 +93,14 @@ export default {
     </TableHeader>
     <TableBody>
       <TableRow v-for="(file, index) in files" :key="file.id" class="group">
-        <TableCell class="w-24 text-center">{{ index + 1 }}</TableCell>
+        <TableCell class="w-24 text-center text-muted-foreground">{{ index + 1 }}</TableCell>
         <TableCell class="font-medium">
           {{ extractFileName(file) }}
         </TableCell>
         <TableCell class="font-medium">
-          {{ file.contentType }}
+          <Badge :class="{' bg-blue-500' : extractFileName(file).includes('.stl')}">
+            {{ file.contentType }}
+          </Badge>
         </TableCell>
         <TableCell class="font-medium">
           {{ formatBytes(file.length) }}

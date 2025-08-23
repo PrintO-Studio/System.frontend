@@ -38,6 +38,11 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({row}) => h('h', { class: 'text-center' }, row.original.sku)
   },
   {
+    id: 'warehouseStorageNumber',
+    accessorKey: 'warehouseStorageNumber',
+    header: 'Секция хранения'
+  },
+  {
     id: 'name',
     accessorKey: 'name',
     header: 'Название',

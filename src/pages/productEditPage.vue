@@ -174,6 +174,7 @@ export default {
           series: z.string().max(50).optional(),
           explicitContent: z.boolean().optional(),
           description: z.string().max(5000).optional(),
+          warehouseStorageNumber: z.number().positive().optional()
         }),
         variations: z.array(rawFigurineSchema).optional(),
       }),
@@ -468,6 +469,16 @@ export default {
               <FormLabel>Описание</FormLabel>
               <FormControl>
                 <Textarea class="max-h-96 h-64" v-bind="componentField" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+
+          <FormField v-slot="{ value, setValue  }" name="product.warehouseStorageNumber">
+            <FormItem>
+              <FormLabel>Секция хранения на складе</FormLabel>
+              <FormControl>
+                <Input :default-value="value" @update:model-value="(v) => { setValue(Number(v)) }" />
               </FormControl>
               <FormMessage />
             </FormItem>
