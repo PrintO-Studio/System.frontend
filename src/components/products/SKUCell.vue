@@ -1,14 +1,11 @@
 <script>
-
 export default {
-  components: {
-
-  },
+  components: {},
   props: {
     oldSKU: String,
-    newSKU: String
-  }
-}
+    newSKU: String,
+  },
+};
 </script>
 
 <template>
@@ -16,7 +13,7 @@ export default {
     <h>
       {{ newSKU }}
     </h>
-    <h class=" text-muted-foreground text-sm">
+    <h class="text-muted-foreground text-sm">
       {{ oldSKU }}
     </h>
   </div>
