@@ -8,10 +8,12 @@ import IntegrationButton from './integrationButton.vue'
 import { store } from '@/main'
 import { displaySonnerError, displaySonnerSuccess } from '@/store/sonnerHelper'
 import { ozonUpdate, wbUpdate } from '@/integrationHelper'
+import SKUCell from './SKUCell.vue'
 
 export interface Product {
     id: number,
-    sku: string,
+    oldSKU: string,
+    newSKU: string,
     name: string,
     series: string,
     primaryImage: any,
@@ -33,9 +35,8 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     id: 'sku',
-    accessorKey: 'sku',
     header: 'Артикул',
-    cell: ({row}) => h('h', { class: 'text-center' }, row.original.sku)
+    cell: ({row}) => h(SKUCell, { oldSKU: row.original.oldSKU, newSKU: row.original.newSKU})
   },
   {
     id: 'warehouseStorageNumber',
