@@ -44,6 +44,11 @@ export const columns: ColumnDef<Product>[] = [
     header: 'Секция хранения'
   },
   {
+    id: 'storageQuantity',
+    accessorKey: 'storageQuantity',
+    header: 'На складе'
+  },
+  {
     id: 'name',
     accessorKey: 'name',
     header: 'Название',

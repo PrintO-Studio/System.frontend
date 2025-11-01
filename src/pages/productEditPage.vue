@@ -116,7 +116,8 @@ export default {
     const isSubmitting = ref(false);
     const isProductLoading = ref(false);
     const isUploading = ref(false);
-    const SKU = ref();
+    const oldSKU = ref();
+    const newSKU = ref();
     const files = ref([]);
     const productId = parseInt(String(route.params.id));
     const images = ref(undefined);
@@ -141,7 +142,8 @@ export default {
         onSuccess: (response) => {
           let product = response.data.value.product;
           let variations = (initialVariations = response.data.value.variations);
-          SKU.value = product.sku;
+          oldSKU.value = product.oldSKU;
+          newSKU.value = product.newSKU;
           notes.value = product.notes;
           files.value = product.files.sort((a, b) => {
             if (a.contentType < b.contentType) {
@@ -175,6 +177,7 @@ export default {
           explicitContent: z.boolean().optional(),
           description: z.string().max(5000).optional(),
           warehouseStorageNumber: z.number().positive().optional(),
+          storageQuantity: z.number().positive().optional()
         }),
         variations: z.array(rawFigurineSchema).optional(),
       }),
@@ -219,7 +222,7 @@ export default {
         productId,
         input,
         onSuccess: (response) => {
-          displaySonnerSuccess(`Товар (Арт. ${SKU.value}) успешно обновлён.`);
+          displaySonnerSuccess(`Товар успешно обновлён.`);
         },
         onError: (error) => {
           if (error?.response?.data?.errors)
@@ -334,7 +337,7 @@ export default {
         (response) => {
           versions.value = response.data.value.versions;
           displaySonnerSuccess(
-            `Интеграция Ozon успешна (SKU: ${response.data.value.sku}).`,
+            `Интеграция Ozon успешна.`,
           );
         },
         (error) => {
@@ -351,7 +354,7 @@ export default {
         (response) => {
           versions.value = response.data.value.versions;
           displaySonnerSuccess(
-            `Интеграция WB успешна (SKU: ${response.data.value.sku}).`,
+            `Интеграция WB успешна.`,
           );
         },
         (error) => {
@@ -362,7 +365,8 @@ export default {
     }
 
     return {
-      SKU,
+      oldSKU,
+      newSKU,
       form,
       onSubmit,
       isSubmitting,
@@ -421,10 +425,16 @@ export default {
           @submit="onSubmit"
           class="space-y-4 flex flex-col m-4"
         >
-          <div class="gap-[calc(var(--spacing)*2)] flex flex-col">
-            <p class="font-medium text-sm opacity-50 select-none">Артикул</p>
-            <Input type="text" disabled :model-value="SKU" />
-          </div>
+          <span class="flex w-full space-x-4">
+            <div class="gap-[calc(var(--spacing)*2)] flex flex-col grow">
+              <p class="font-medium text-sm opacity-50 select-none">Старый артикул</p>
+              <Input type="text" disabled :model-value="oldSKU" />
+            </div>
+            <div class="gap-[calc(var(--spacing)*2)] flex flex-col grow">
+              <p class="font-medium text-sm opacity-50 select-none">Новый артикул</p>
+              <Input type="text" disabled :model-value="newSKU" />
+            </div>
+          </span>
 
           <FormField v-slot="{ componentField }" name="product.name">
             <FormItem>
@@ -480,6 +490,26 @@ export default {
           >
             <FormItem>
               <FormLabel>Секция хранения на складе</FormLabel>
+              <FormControl>
+                <Input
+                  :default-value="value"
+                  @update:model-value="
+                    (v) => {
+                      setValue(Number(v));
+                    }
+                  "
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+
+          <FormField
+            v-slot="{ value, setValue }"
+            name="product.storageQuantity"
+          >
+            <FormItem>
+              <FormLabel>Количество на складе</FormLabel>
               <FormControl>
                 <Input
                   :default-value="value"

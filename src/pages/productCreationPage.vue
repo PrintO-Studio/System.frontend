@@ -69,6 +69,7 @@ export default {
           explicitContent: z.boolean().optional(),
           description: z.string().max(5000),
           warehouseStorageNumber: z.number().positive().optional(),
+          storageQuantity: z.number().positive().optional()
         }),
         variations: z.array(rawFigurineSchema).optional(),
       }),
@@ -187,6 +188,26 @@ export default {
         >
           <FormItem>
             <FormLabel>Секция хранения на складе</FormLabel>
+            <FormControl>
+              <Input
+                :default-value="value"
+                @update:model-value="
+                  (v) => {
+                    setValue(Number(v));
+                  }
+                "
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField
+          v-slot="{ value, setValue }"
+          name="product.storageQuantity"
+        >
+          <FormItem>
+            <FormLabel>Количество на складе</FormLabel>
             <FormControl>
               <Input
                 :default-value="value"
